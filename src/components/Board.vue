@@ -1,13 +1,17 @@
 <template>
   <div class="board-container">
-    <!-- Cell -->
-    {{ board.cells }}
+    <div v-for="(r_item, r_index) in board.cells" :key="r_index">
+      <Cell v-for="(c_item, c_index) in r_item" :key="c_index">
+        {{ c_item }}
+      </Cell>
+    </div>
 
     <!-- Tile -->
   </div>
 </template>
 
 <script setup lang="ts">
+import Cell from '@/components/Cell.vue';
 import { Board } from '@/utils';
 
 const board = new Board();
@@ -15,13 +19,8 @@ const board = new Board();
 
 <stype scoped lang="scss">
 .board-container {
-  order: 1;
-  width: 440px;
-  height: 440px;
-  padding: 5px;
-  background-color: #baa;
-  border-radius: 7px;
-  outline: none;
-  position: relative;
+  background-color: var(--background-color--board);
+  padding: 0.3125rem;
+  border-radius: 0.5rem;
 }
 </stype>
