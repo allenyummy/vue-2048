@@ -16,8 +16,8 @@
   height: 6.25rem;
   border-radius: 0.5rem;
   margin: 0.1875rem;
-  line-height: 5.625rem;
-  font-size: 3.4375rem;
+  line-height: 6rem;
+  // font-size: 3rem;
   font-weight: bold;
 }
 </stype>

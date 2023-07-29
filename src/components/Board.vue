@@ -2,7 +2,7 @@
   <div class="board-container">
     <div v-for="(r_item, r_index) in board.cells" :key="r_index">
       <Cell v-for="(c_item, c_index) in r_item" :key="c_index">
-        {{ c_item }}
+        {{ c_item.value }}
       </Cell>
     </div>
 
