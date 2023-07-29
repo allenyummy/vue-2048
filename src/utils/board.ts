@@ -5,9 +5,9 @@ interface ITile {
   value: number;
   row: number;
   column: number;
-  // oldRow: number;
-  // oldColumn: number;
-  // markForDeletion: boolean;
+  oldRow?: number;
+  oldColumn?: number;
+  markForDeletion?: boolean;
   // mergedInto: unknown;
 }
 
@@ -16,14 +16,13 @@ class Tile {
   value: number;
   row: number;
   column: number;
-  // oldRow = -1;
-  // oldColumn = -1;
-  // markForDeletion = false;
+  oldRow = -1;
+  oldColumn = -1;
+  markForDeletion = false;
   // mergedInto = null;
   // this.id = Tile.id++;
 
   constructor(tile: ITile) {
-    // this.tile = tile;
     const { id, value, row, column } = tile;
     this.value = value;
     this.row = row;
@@ -36,11 +35,17 @@ class Board {
   tiles: ITile[];
   cells: ITile[][];
   size = 4;
+  randomFourProbability = 0.1;
 
   constructor() {
     this.tiles = [];
     this.cells = [];
+    this.initCell();
+    this.addRandomTile();
+    this.setPositions();
+  }
 
+  initCell() {
     for (let i = 0; i < this.size; i++) {
       const row: ITile[] = [];
       for (let j = 0; j < this.size; j++) {
@@ -50,15 +55,11 @@ class Board {
       }
       this.cells[i] = row;
     }
-
-    // Set random value
-
-    // Set position
   }
 
-  addTile(): ITile {
+  addTile(value: number = 0): ITile {
     const tile = new Tile({
-      value: 0,
+      value,
       row: -1,
       column: -1,
       id: 0,
@@ -67,19 +68,31 @@ class Board {
   }
 
   addRandomTile() {
-    // var emptyCells = [];
-    // for (var r = 0; r < Board.size; ++r) {
-    //   for (var c = 0; c < Board.size; ++c) {
-    //     if (this.cells[r][c].value == 0) {
-    //       emptyCells.push({ r: r, c: c });
-    //     }
-    //   }
-    // }
-    // var index = ~~(Math.random() * emptyCells.length);
-    // var cell = emptyCells[index];
-    // var newValue = Math.random() < Board.fourProbability ? 4 : 2;
-    // this.cells[cell.r][cell.c] = this.addTile(newValue);
-  };
+    const emptyCells = [];
+    for (let r = 0; r < this.size; ++r) {
+      for (let c = 0; c < this.size; ++c) {
+        if (this.cells[r][c].value == 0) {
+          emptyCells.push({ r: r, c: c });
+        }
+      }
+    }
+    const randomIndex = ~~(Math.random() * emptyCells.length);
+    const cell = emptyCells[randomIndex];
+    const newValue = Math.random() < this.randomFourProbability ? 4 : 2;
+    this.cells[cell.r][cell.c] = this.addTile(newValue);
+  }
+
+  setPositions() {
+    this.cells.forEach((row, rowIndex) => {
+      row.forEach((tile, columnIndex) => {
+        tile.oldRow = tile.row;
+        tile.oldColumn = tile.column;
+        tile.row = rowIndex;
+        tile.column = columnIndex;
+        tile.markForDeletion = false;
+      });
+    });
+  }
 }
 
 export { Board };
