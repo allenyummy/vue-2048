@@ -11,10 +11,40 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+
 import Cell from '@/components/Cell.vue';
+import { ArrowEvent } from '@/types';
 import { Board } from '@/utils';
 
-const board = new Board();
+const board = ref(new Board());
+
+const isArrowEvent = (event: KeyboardEvent) => {
+  return [
+    ArrowEvent.ArrowDown,
+    ArrowEvent.ArrowUp,
+    ArrowEvent.ArrowLeft,
+    ArrowEvent.ArrowRight,
+  ].includes(event.key as ArrowEvent);
+};
+
+const handleKeyDownEvent = (event: KeyboardEvent) => {
+  event.preventDefault();
+  if (isArrowEvent(event)) {
+    board.value.move(event.key as ArrowEvent);
+  }
+};
+
+const registerEvents = () => {
+  window.addEventListener('keydown', handleKeyDownEvent);
+};
+
+const unregisterEvents = () => {
+  window.removeEventListener('keydown', handleKeyDownEvent);
+};
+
+onMounted(registerEvents);
+onBeforeUnmount(unregisterEvents);
 </script>
 
 <stype scoped lang="scss">

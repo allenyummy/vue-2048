@@ -1,3 +1,7 @@
+import { dir } from 'console';
+
+import { ArrowEvent } from '@/types';
+
 interface Cell {}
 
 interface ITile {
@@ -76,6 +80,9 @@ class Board {
         }
       }
     }
+    if (emptyCells.length == 0) {
+      return;
+    }
     const randomIndex = ~~(Math.random() * emptyCells.length);
     const cell = emptyCells[randomIndex];
     const newValue = Math.random() < this.randomFourProbability ? 4 : 2;
@@ -92,6 +99,12 @@ class Board {
         tile.markForDeletion = false;
       });
     });
+  }
+
+  move(direction: ArrowEvent) {
+    console.log(direction);
+    this.addRandomTile();
+    this.setPositions();
   }
 }
 
